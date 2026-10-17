@@ -6,7 +6,7 @@ import 'package:api_client/api_client.dart';
 class RacesResource {
   /// {@macro races_resource}
   const RacesResource({required FormulaOneApiClient apiClient})
-      : _apiClient = apiClient;
+    : _apiClient = apiClient;
 
   final FormulaOneApiClient _apiClient;
 

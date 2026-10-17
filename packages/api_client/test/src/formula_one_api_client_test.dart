@@ -78,36 +78,40 @@ void main() {
         ).called(1);
       });
 
-      test('throws FormulaOneMalformedResponseFailure on an empty body',
-          () async {
-        stubGet(() async => Response(requestOptions: requestOptions));
+      test(
+        'throws FormulaOneMalformedResponseFailure on an empty body',
+        () async {
+          stubGet(() async => Response(requestOptions: requestOptions));
 
-        await expectLater(
-          client.get('/x'),
-          throwsA(isA<FormulaOneMalformedResponseFailure>()),
-        );
-      });
+          await expectLater(
+            client.get('/x'),
+            throwsA(isA<FormulaOneMalformedResponseFailure>()),
+          );
+        },
+      );
 
-      test('throws FormulaOneHttpFailure with the status code on badResponse',
-          () async {
-        final error = DioException(
-          requestOptions: requestOptions,
-          type: DioExceptionType.badResponse,
-          message: 'Not found',
-          response: Response(requestOptions: requestOptions, statusCode: 404),
-        );
-        stubGet(() async => throw error);
+      test(
+        'throws FormulaOneHttpFailure with the status code on badResponse',
+        () async {
+          final error = DioException(
+            requestOptions: requestOptions,
+            type: DioExceptionType.badResponse,
+            message: 'Not found',
+            response: Response(requestOptions: requestOptions, statusCode: 404),
+          );
+          stubGet(() async => throw error);
 
-        await expectLater(
-          client.get('/x'),
-          throwsA(
-            isA<FormulaOneHttpFailure>()
-                .having((e) => e.statusCode, 'statusCode', 404)
-                .having((e) => e.message, 'message', 'Not found')
-                .having((e) => e.cause, 'cause', error),
-          ),
-        );
-      });
+          await expectLater(
+            client.get('/x'),
+            throwsA(
+              isA<FormulaOneHttpFailure>()
+                  .having((e) => e.statusCode, 'statusCode', 404)
+                  .having((e) => e.message, 'message', 'Not found')
+                  .having((e) => e.cause, 'cause', error),
+            ),
+          );
+        },
+      );
 
       test('throws FormulaOneNetworkFailure on a timeout', () async {
         final error = DioException(
@@ -127,17 +131,19 @@ void main() {
         );
       });
 
-      test('throws FormulaOneNetworkFailure on any other DioException type',
-          () async {
-        stubGet(
-          () async => throw DioException(requestOptions: requestOptions),
-        );
+      test(
+        'throws FormulaOneNetworkFailure on any other DioException type',
+        () async {
+          stubGet(
+            () async => throw DioException(requestOptions: requestOptions),
+          );
 
-        await expectLater(
-          client.get('/x'),
-          throwsA(isA<FormulaOneNetworkFailure>()),
-        );
-      });
+          await expectLater(
+            client.get('/x'),
+            throwsA(isA<FormulaOneNetworkFailure>()),
+          );
+        },
+      );
 
       test('throws FormulaOneUnknownFailure for a non-Dio error', () async {
         final error = StateError('boom');

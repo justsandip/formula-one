@@ -5,22 +5,22 @@ import 'package:test/test.dart';
 class _MockFormulaOneApiClient extends Mock implements FormulaOneApiClient {}
 
 Map<String, dynamic> _raceJson() => <String, dynamic>{
-      'season': '2026',
-      'round': '1',
-      'raceName': 'Australian Grand Prix',
-      'Circuit': <String, dynamic>{
-        'circuitId': 'albert_park',
-        'circuitName': 'Albert Park Grand Prix Circuit',
-        'Location': <String, dynamic>{
-          'lat': '-37.8497',
-          'long': '144.968',
-          'locality': 'Melbourne',
-          'country': 'Australia',
-        },
-      },
-      'date': '2026-03-08',
-      'time': '04:00:00Z',
-    };
+  'season': '2026',
+  'round': '1',
+  'raceName': 'Australian Grand Prix',
+  'Circuit': <String, dynamic>{
+    'circuitId': 'albert_park',
+    'circuitName': 'Albert Park Grand Prix Circuit',
+    'Location': <String, dynamic>{
+      'lat': '-37.8497',
+      'long': '144.968',
+      'locality': 'Melbourne',
+      'country': 'Australia',
+    },
+  },
+  'date': '2026-03-08',
+  'time': '04:00:00Z',
+};
 
 Map<String, dynamic> _body(List<Map<String, dynamic>> races) =>
     <String, dynamic>{
@@ -41,8 +41,9 @@ void main() {
 
     group('getRaces', () {
       test('requests the current season by default', () async {
-        when(() => apiClient.get('/current.json'))
-            .thenAnswer((_) async => _body([_raceJson()]));
+        when(
+          () => apiClient.get('/current.json'),
+        ).thenAnswer((_) async => _body([_raceJson()]));
 
         final races = await resource.getRaces();
 
@@ -55,8 +56,9 @@ void main() {
       });
 
       test('requests the given season', () async {
-        when(() => apiClient.get('/2025.json'))
-            .thenAnswer((_) async => _body([_raceJson()]));
+        when(
+          () => apiClient.get('/2025.json'),
+        ).thenAnswer((_) async => _body([_raceJson()]));
 
         await resource.getRaces(season: 2025);
 
@@ -64,26 +66,26 @@ void main() {
       });
 
       test('returns an empty list when there are no races', () async {
-        when(() => apiClient.get('/current.json'))
-            .thenAnswer((_) async => _body([]));
+        when(
+          () => apiClient.get('/current.json'),
+        ).thenAnswer((_) async => _body([]));
 
         expect(await resource.getRaces(), isEmpty);
       });
 
       test('lets client failures through unchanged', () async {
         const failure = FormulaOneNetworkFailure('offline');
-        when(() => apiClient.get('/current.json'))
-            .thenAnswer((_) async => throw failure);
+        when(
+          () => apiClient.get('/current.json'),
+        ).thenAnswer((_) async => throw failure);
 
-        await expectLater(
-          resource.getRaces(),
-          throwsA(same(failure)),
-        );
+        await expectLater(resource.getRaces(), throwsA(same(failure)));
       });
 
       test('throws FormulaOneDeserializationFailure without MRData', () async {
-        when(() => apiClient.get('/current.json'))
-            .thenAnswer((_) async => <String, dynamic>{});
+        when(
+          () => apiClient.get('/current.json'),
+        ).thenAnswer((_) async => <String, dynamic>{});
 
         await expectLater(
           resource.getRaces(),
@@ -95,33 +97,38 @@ void main() {
         );
       });
 
-      test('throws FormulaOneDeserializationFailure when Races is not a list',
-          () async {
-        when(() => apiClient.get('/current.json')).thenAnswer(
-          (_) async => <String, dynamic>{
-            'MRData': <String, dynamic>{
-              'RaceTable': <String, dynamic>{'Races': 'nope'},
+      test(
+        'throws FormulaOneDeserializationFailure when Races is not a list',
+        () async {
+          when(() => apiClient.get('/current.json')).thenAnswer(
+            (_) async => <String, dynamic>{
+              'MRData': <String, dynamic>{
+                'RaceTable': <String, dynamic>{'Races': 'nope'},
+              },
             },
-          },
-        );
+          );
 
-        await expectLater(
-          resource.getRaces(),
-          throwsA(isA<FormulaOneDeserializationFailure>()),
-        );
-      });
+          await expectLater(
+            resource.getRaces(),
+            throwsA(isA<FormulaOneDeserializationFailure>()),
+          );
+        },
+      );
 
-      test('throws FormulaOneDeserializationFailure when a race is invalid',
-          () async {
-        final broken = _raceJson()..remove('raceName');
-        when(() => apiClient.get('/current.json'))
-            .thenAnswer((_) async => _body([broken]));
+      test(
+        'throws FormulaOneDeserializationFailure when a race is invalid',
+        () async {
+          final broken = _raceJson()..remove('raceName');
+          when(
+            () => apiClient.get('/current.json'),
+          ).thenAnswer((_) async => _body([broken]));
 
-        await expectLater(
-          resource.getRaces(),
-          throwsA(isA<FormulaOneDeserializationFailure>()),
-        );
-      });
+          await expectLater(
+            resource.getRaces(),
+            throwsA(isA<FormulaOneDeserializationFailure>()),
+          );
+        },
+      );
     });
   });
 }

@@ -8,14 +8,15 @@ import 'package:dio/dio.dart';
 class FormulaOneApiClient {
   /// {@macro formula_one_api_client}
   FormulaOneApiClient({String baseUrl = defaultBaseUrl, Dio? dio})
-      : _dio = dio ??
-            Dio(
-              BaseOptions(
-                baseUrl: baseUrl,
-                connectTimeout: const Duration(seconds: 10),
-                receiveTimeout: const Duration(seconds: 10),
-              ),
-            );
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: baseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 10),
+            ),
+          );
 
   /// Base URL of the Jolpica Ergast-compatible API.
   static const defaultBaseUrl = 'https://api.jolpi.ca/ergast/f1';
@@ -65,10 +66,10 @@ class FormulaOneApiClient {
     final message = error.message ?? 'Request to $path failed';
     return switch (error.type) {
       DioExceptionType.badResponse => FormulaOneHttpFailure(
-          message,
-          statusCode: error.response?.statusCode,
-          cause: error,
-        ),
+        message,
+        statusCode: error.response?.statusCode,
+        cause: error,
+      ),
       // Timeouts and connection errors, cancel, bad-certificate and unknown
       _ => FormulaOneNetworkFailure(message, cause: error),
     };

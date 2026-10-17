@@ -34,10 +34,7 @@ void main() {
 
       expect(failure.message, 'empty');
       expect(failure.cause, isNull);
-      expect(
-        failure.toString(),
-        'FormulaOneMalformedResponseFailure: empty',
-      );
+      expect(failure.toString(), 'FormulaOneMalformedResponseFailure: empty');
     });
 
     test('FormulaOneUnknownFailure keeps message and cause', () {
@@ -56,10 +53,7 @@ void main() {
 
       expect(failure.message, 'bad shape');
       expect(failure.cause, cause);
-      expect(
-        failure.toString(),
-        'FormulaOneDeserializationFailure: bad shape',
-      );
+      expect(failure.toString(), 'FormulaOneDeserializationFailure: bad shape');
     });
   });
 }
