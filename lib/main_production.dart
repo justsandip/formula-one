@@ -10,7 +10,7 @@ Future<void> main() async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
-  
+
   final apiClient = FormulaOneApiClient();
   final formulaOneRepository = FormulaOneRepository(apiClient: apiClient);
 
