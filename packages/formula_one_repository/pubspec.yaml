@@ -1,0 +1,17 @@
+name: formula_one_repository
+description: Repository to manage Formula One APIs.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  api_client:
+    path: ../api_client
+
+dev_dependencies:
+  coverage: ^1.16.0
+  mocktail: ^1.0.5
+  test: ^1.32.0
+  very_good_analysis: ^11.0.0
