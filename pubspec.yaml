@@ -11,6 +11,8 @@ dependencies:
   api_client:
     path: packages/api_client
   bloc: ^9.2.1
+  bloc_concurrency: ^0.3.0
+  equatable: ^3.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -18,8 +20,10 @@ dependencies:
     sdk: flutter
   formula_one_repository:
     path: packages/formula_one_repository
+  google_fonts: ^9.0.0
   intl: ^0.20.2
   material_ui: ^1.1.1
+  meta: ^1.19.0
 
 dev_dependencies:
   bloc_lint: ^0.4.2

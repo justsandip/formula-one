@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_one/app/app.dart';
-import 'package:formula_one/counter/counter.dart';
+import 'package:formula_one/schedule/schedule.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -23,7 +23,7 @@ void main() {
   group('AppView', () {
     testWidgets('renders CounterPage', (tester) async {
       await tester.pumpWidget(App(formulaOneRepository: formulaOneRepository));
-      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.byType(SchedulePage), findsOneWidget);
     });
   });
 }
