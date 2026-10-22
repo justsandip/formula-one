@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formula_one/counter/counter.dart';
 import 'package:formula_one/l10n/l10n.dart';
+import 'package:formula_one/schedule/schedule.dart';
+import 'package:formula_one/theme/formula_one_theme.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -24,15 +25,10 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        useMaterial3: true,
-      ),
+      theme: const FormulaOneTheme().themeData,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const SchedulePage(),
     );
   }
 }

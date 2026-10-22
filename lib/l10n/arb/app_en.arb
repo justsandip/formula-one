@@ -1,7 +1,89 @@
 {
-    "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
+  "@@locale": "en",
+  "scheduleTitle": "Calendar",
+  "@scheduleTitle": {
+    "description": "Title of the season calendar page"
+  },
+  "scheduleSeasonLabel": "{year} season",
+  "@scheduleSeasonLabel": {
+    "description": "Small label above the calendar title",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
     }
+  },
+  "scheduleEmpty": "No races yet",
+  "@scheduleEmpty": {
+    "description": "Shown when the season has no races"
+  },
+  "scheduleStatusDone": "Done",
+  "@scheduleStatusDone": {
+    "description": "Chip on a race that has already been run"
+  },
+  "scheduleStatusNext": "Next",
+  "@scheduleStatusNext": {
+    "description": "Chip on the next race in the list"
+  },
+  "scheduleStatusUpcoming": "Upcoming",
+  "@scheduleStatusUpcoming": {
+    "description": "Chip on a race that has not been run yet"
+  },
+  "scheduleRoundShortLabel": "R{round}",
+  "@scheduleRoundShortLabel": {
+    "description": "Short round number in a race row, e.g. R03",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleRaceLocationAndDate": "{location} · {date}",
+  "@scheduleRaceLocationAndDate": {
+    "description": "Second line of a race row: city and date",
+    "placeholders": {
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "DateTime",
+        "format": "d MMM",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "scheduleCountdownDaysUnit": "{count, plural, one{day} other{days}}",
+  "@scheduleCountdownDaysUnit": {
+    "description": "Unit under the days number in the next race countdown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleCountdownHoursUnit": "{count, plural, one{hour} other{hours}}",
+  "@scheduleCountdownHoursUnit": {
+    "description": "Unit under the hours number in the next race countdown",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleCountdownMinUnit": "min",
+  "@scheduleCountdownMinUnit": {
+    "description": "Unit under the hours number in the next race countdown"
+  },
+  "scheduleFailureOffline": "You are offline. Check your connection and try again.",
+  "@scheduleFailureOffline": {
+    "description": "Shown when the schedule cannot load because of the network"
+  },
+  "scheduleFailureUnexpected": "Something went wrong. Please try again.",
+  "@scheduleFailureUnexpected": {
+    "description": "Shown when the schedule cannot load because of the unexpected reason"
+  },
+  "commonRetryButton": "Retry",
+  "@commonRetryButton": {
+    "description": "Button that retries a failed action"
+  }
 }
