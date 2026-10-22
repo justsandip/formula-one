@@ -52,73 +52,63 @@ class _TextStylesMobile extends FormulaOneTextStyles {
 
   @override
   TextStyle get displayLarge => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 44,
-        height: 1,
-      );
+    fontWeight: FontWeight.w700,
+    fontSize: 44,
+    height: 1,
+  );
 
   @override
   TextStyle get displayMedium => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 40,
-        height: 1,
-      );
+    fontWeight: FontWeight.w700,
+    fontSize: 40,
+    height: 1,
+  );
 
   @override
   TextStyle get displaySmall => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 36,
-        height: 1,
-      );
+    fontWeight: FontWeight.w700,
+    fontSize: 36,
+    height: 1,
+  );
 
   @override
-  TextStyle get headlineLarge => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 28,
-      );
+  TextStyle get headlineLarge =>
+      GoogleFonts.barlowCondensed(fontWeight: FontWeight.w700, fontSize: 28);
 
   @override
-  TextStyle get headlineMedium => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 20,
-      );
+  TextStyle get headlineMedium =>
+      GoogleFonts.barlowCondensed(fontWeight: FontWeight.w700, fontSize: 20);
 
   @override
-  TextStyle get titleLarge => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w700,
-        fontSize: 18,
-      );
+  TextStyle get titleLarge =>
+      GoogleFonts.barlowCondensed(fontWeight: FontWeight.w700, fontSize: 18);
 
   @override
   TextStyle get titleMedium => GoogleFonts.barlowCondensed(
-        fontWeight: FontWeight.w600,
-        fontSize: 17,
-        letterSpacing: 0.34,
-      );
+    fontWeight: FontWeight.w600,
+    fontSize: 17,
+    letterSpacing: 0.34,
+  );
 
   @override
-  TextStyle get bodyMedium => GoogleFonts.barlow(
-        fontWeight: FontWeight.w400,
-        fontSize: 13,
-      );
+  TextStyle get bodyMedium =>
+      GoogleFonts.barlow(fontWeight: FontWeight.w400, fontSize: 13);
 
   @override
-  TextStyle get labelLarge => GoogleFonts.barlow(
-        fontWeight: FontWeight.w600,
-        fontSize: 13,
-      );
+  TextStyle get labelLarge =>
+      GoogleFonts.barlow(fontWeight: FontWeight.w600, fontSize: 13);
 
   @override
   TextStyle get labelMedium => GoogleFonts.barlow(
-        fontWeight: FontWeight.w500,
-        fontSize: 12,
-        letterSpacing: 1.68,
-      );
+    fontWeight: FontWeight.w500,
+    fontSize: 12,
+    letterSpacing: 1.68,
+  );
 
   @override
   TextStyle get labelSmall => GoogleFonts.barlow(
-        fontWeight: FontWeight.w600,
-        fontSize: 11,
-        letterSpacing: 0.88,
-      );
+    fontWeight: FontWeight.w600,
+    fontSize: 11,
+    letterSpacing: 0.88,
+  );
 }

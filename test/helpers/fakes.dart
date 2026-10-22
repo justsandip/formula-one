@@ -2,11 +2,7 @@ import 'package:api_client/api_client.dart';
 
 /// Builds a [Race]. Defaults: name `Race <round> Grand Prix`, circuit
 /// `Circuit <round>` in `City <round>`.
-Race buildRace({
-  required DateTime startsAt,
-  int round = 1,
-  String? name,
-}) {
+Race buildRace({required DateTime startsAt, int round = 1, String? name}) {
   return Race(
     round: '$round',
     name: name ?? 'Race $round Grand Prix',

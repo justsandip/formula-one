@@ -22,8 +22,9 @@ void main() {
       );
     }
 
-    testWidgets('shows the offline message for a network failure',
-        (tester) async {
+    testWidgets('shows the offline message for a network failure', (
+      tester,
+    ) async {
       await pumpFailure(
         tester,
         failure: const FormulaOneNetworkFailure('offline'),
@@ -41,8 +42,9 @@ void main() {
       expect(find.text(generic), findsOneWidget);
     });
 
-    testWidgets('shows the generic message when there is no failure',
-        (tester) async {
+    testWidgets('shows the generic message when there is no failure', (
+      tester,
+    ) async {
       await pumpFailure(tester);
 
       expect(find.text(generic), findsOneWidget);

@@ -16,9 +16,7 @@ class SchedulePage extends StatelessWidget {
   const new({super.key});
 
   static Route<void> route() {
-    return MaterialPageRoute<void>(
-      builder: (_) => const SchedulePage(),
-    );
+    return MaterialPageRoute<void>(builder: (_) => const SchedulePage());
   }
 
   @override
@@ -53,9 +51,9 @@ class ScheduleView extends StatelessWidget {
               case ScheduleStatus.failure:
                 return ScheduleFailure(
                   failure: state.failure,
-                  onRetry: () => context
-                      .read<ScheduleBloc>()
-                      .add(ScheduleRequested(season: state.season)),
+                  onRetry: () => context.read<ScheduleBloc>().add(
+                    ScheduleRequested(season: state.season),
+                  ),
                 );
             }
           },

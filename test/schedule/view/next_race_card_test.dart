@@ -30,8 +30,9 @@ void main() {
       expect(find.text('min'), findsOneWidget);
     });
 
-    testWidgets('shows zeros when the race has already started',
-        (tester) async {
+    testWidgets('shows zeros when the race has already started', (
+      tester,
+    ) async {
       final race = buildRace(
         startsAt: DateTime.now().subtract(const Duration(hours: 1)),
       );
@@ -41,8 +42,9 @@ void main() {
       expect(find.text('00'), findsNWidgets(3));
     });
 
-    testWidgets('keeps rendering after the refresh timer fires',
-        (tester) async {
+    testWidgets('keeps rendering after the refresh timer fires', (
+      tester,
+    ) async {
       final race = buildRace(
         startsAt: DateTime.now().add(const Duration(days: 2, minutes: 30)),
       );
