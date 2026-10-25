@@ -26,6 +26,11 @@ class FormulaOneApiClient {
   /// Season Races endpoints.
   late final RacesResource racesResource = RacesResource(apiClient: this);
 
+  /// Season Standings endpoints.
+  late final StandingsResource standingsResource = StandingsResource(
+    apiClient: this,
+  );
+
   /// Performs a GET request to [path] and returns the decoded JSON body.
   ///
   /// [path] is relative to the client's base URL and starts with `/`, e.g.
