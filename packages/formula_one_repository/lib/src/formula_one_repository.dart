@@ -19,4 +19,22 @@ class FormulaOneRepository {
   Future<List<Race>> getRaces({int? season}) {
     return _apiClient.racesResource.getRaces(season: season);
   }
+
+  /// Returns current drivers' standing for the [season]. Defaults to
+  /// the current season.
+  ///
+  /// Throws a [FormulaOneApiFailure] if the standings cannot be loaded.
+  Future<List<DriverStanding>> getDriverStandings({String season = 'current'}) {
+    return _apiClient.standingsResource.getDriverStandings(season: season);
+  }
+
+  /// Returns current constructors' standing for the [season]. Defaults to
+  /// the current season.
+  ///
+  /// Throws a [FormulaOneApiFailure] if the standings cannot be loaded.
+  Future<List<ConstructorStanding>> getConstructorStandings({
+    String season = 'current',
+  }) {
+    return _apiClient.standingsResource.getConstructorStandings(season: season);
+  }
 }
