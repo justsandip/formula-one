@@ -9,10 +9,13 @@ class _MockFormulaOneApiClient extends Mock implements FormulaOneApiClient {}
 
 class _MockRacesResource extends Mock implements RacesResource {}
 
+class _MockStandingsResource extends Mock implements StandingsResource {}
+
 void main() {
   group('FormulaOneRepository', () {
     late FormulaOneApiClient apiClient;
     late RacesResource racesResource;
+    late StandingsResource standingsResource;
     late FormulaOneRepository repository;
 
     final race = Race(
@@ -29,10 +32,39 @@ void main() {
       startsAt: DateTime.utc(2026, 3, 8, 4),
     );
 
+    const constructor = Constructor(
+      id: 'mclaren',
+      name: 'McLaren',
+      nationality: 'British',
+    );
+    const driver = Driver(
+      id: 'norris',
+      permanentNumber: '4',
+      code: 'NOR',
+      givenName: 'Lando',
+      familyName: 'Norris',
+      nationality: 'British',
+    );
+    const driverStanding = DriverStanding(
+      position: 1,
+      points: 408,
+      wins: 7,
+      driver: driver,
+      constructors: [constructor],
+    );
+    const constructorStanding = ConstructorStanding(
+      position: 1,
+      points: 800,
+      wins: 14,
+      constructor: constructor,
+    );
+
     setUp(() {
       apiClient = _MockFormulaOneApiClient();
       racesResource = _MockRacesResource();
+      standingsResource = _MockStandingsResource();
       when(() => apiClient.racesResource).thenReturn(racesResource);
+      when(() => apiClient.standingsResource).thenReturn(standingsResource);
       repository = FormulaOneRepository(apiClient: apiClient);
     });
 
@@ -62,6 +94,84 @@ void main() {
         ).thenAnswer((_) async => throw failure);
 
         await expectLater(repository.getRaces(), throwsA(same(failure)));
+      });
+    });
+
+    group('getDriverStandings', () {
+      test('returns the current season standings by default', () async {
+        when(
+          () => standingsResource.getDriverStandings(season: 'current'),
+        ).thenAnswer((_) async => [driverStanding]);
+
+        expect(await repository.getDriverStandings(), [driverStanding]);
+        verify(
+          () => standingsResource.getDriverStandings(season: 'current'),
+        ).called(1);
+      });
+
+      test('passes the requested season through', () async {
+        when(
+          () => standingsResource.getDriverStandings(season: '2025'),
+        ).thenAnswer((_) async => [driverStanding]);
+
+        expect(await repository.getDriverStandings(season: '2025'), [
+          driverStanding,
+        ]);
+        verify(
+          () => standingsResource.getDriverStandings(season: '2025'),
+        ).called(1);
+      });
+
+      test('lets api failures through unchanged', () async {
+        const failure = FormulaOneHttpFailure('boom', statusCode: 500);
+        when(
+          () => standingsResource.getDriverStandings(season: 'current'),
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(
+          repository.getDriverStandings(),
+          throwsA(same(failure)),
+        );
+      });
+    });
+
+    group('getConstructorStandings', () {
+      test('returns the current season standings by default', () async {
+        when(
+          () => standingsResource.getConstructorStandings(season: 'current'),
+        ).thenAnswer((_) async => [constructorStanding]);
+
+        expect(await repository.getConstructorStandings(), [
+          constructorStanding,
+        ]);
+        verify(
+          () => standingsResource.getConstructorStandings(season: 'current'),
+        ).called(1);
+      });
+
+      test('passes the requested season through', () async {
+        when(
+          () => standingsResource.getConstructorStandings(season: '2025'),
+        ).thenAnswer((_) async => [constructorStanding]);
+
+        expect(await repository.getConstructorStandings(season: '2025'), [
+          constructorStanding,
+        ]);
+        verify(
+          () => standingsResource.getConstructorStandings(season: '2025'),
+        ).called(1);
+      });
+
+      test('lets api failures through unchanged', () async {
+        const failure = FormulaOneDeserializationFailure('bad shape');
+        when(
+          () => standingsResource.getConstructorStandings(season: 'current'),
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(
+          repository.getConstructorStandings(),
+          throwsA(same(failure)),
+        );
       });
     });
   });
