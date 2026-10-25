@@ -33,9 +33,7 @@ void main() {
     test('differs when wins differ', () {
       expect(
         ConstructorStanding.fromJson(constructorStandingJson()),
-        isNot(
-          ConstructorStanding.fromJson(constructorStandingJson(wins: '1')),
-        ),
+        isNot(ConstructorStanding.fromJson(constructorStandingJson(wins: '1'))),
       );
     });
 

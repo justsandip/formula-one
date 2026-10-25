@@ -34,10 +34,7 @@ void main() {
         ),
       );
 
-      expect(
-        standing.constructors.map((c) => c.id),
-        ['alpine', 'mclaren'],
-      );
+      expect(standing.constructors.map((c) => c.id), ['alpine', 'mclaren']);
     });
 
     test('fromJson throws a FormatException for a non-numeric position', () {
