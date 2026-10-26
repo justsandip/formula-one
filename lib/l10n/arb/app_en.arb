@@ -1,5 +1,17 @@
 {
   "@@locale": "en",
+  "homeTabCalendar": "Calendar",
+  "@homeTabCalendar": {
+    "description": "Bottom navigation label for the season calendar"
+  },
+  "homeTabResults": "Results",
+  "@homeTabResults": {
+    "description": "Bottom navigation label for the race results"
+  },
+  "homeTabStandings": "Standings",
+  "@homeTabStandings": {
+    "description": "Bottom navigation label for the championship standings"
+  },
   "scheduleTitle": "Calendar",
   "@scheduleTitle": {
     "description": "Title of the season calendar page"

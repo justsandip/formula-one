@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formula_one/home/home.dart';
 import 'package:formula_one/l10n/l10n.dart';
-import 'package:formula_one/schedule/schedule.dart';
 import 'package:formula_one/theme/formula_one_theme.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
@@ -28,7 +28,7 @@ class AppView extends StatelessWidget {
       theme: const FormulaOneTheme().themeData,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const SchedulePage(),
+      home: const HomePage(),
     );
   }
 }
