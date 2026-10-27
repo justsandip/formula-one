@@ -97,5 +97,92 @@
   "commonRetryButton": "Retry",
   "@commonRetryButton": {
     "description": "Button that retries a failed action"
+  },
+  "commonFailureOffline": "You are offline. Check your connection and try again.",
+  "@commonFailureOffline": {
+    "description": "Shown when a screen cannot load because of the network"
+  },
+  "commonFailureGeneric": "Something went wrong. Please try again.",
+  "@commonFailureGeneric": {
+    "description": "Shown when a screen fails to load for any other reason"
+  },
+  "standingsKicker": "2026 Season",
+  "@standingsKicker": {
+    "description": "Small label above the standings title"
+  },
+  "standingsTitle": "Standings",
+  "@standingsTitle": {
+    "description": "Title of the standings page"
+  },
+  "standingsTabDrivers": "Drivers",
+  "@standingsTabDrivers": {
+    "description": "Toggle for the drivers' championship"
+  },
+  "standingsTabConstructors": "Constructors",
+  "@standingsTabConstructors": {
+    "description": "Toggle for the constructors' championship"
+  },
+  "standingsLeaderChip": "Leader",
+  "@standingsLeaderChip": {
+    "description": "Chip on the championship leader card"
+  },
+  "standingsDriverNumber": "No. {number}",
+  "@standingsDriverNumber": {
+    "description": "A driver's permanent race number",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "standingsSubtitle": "{wins, plural, =0{{detail}} one{{detail} · {wins} win} other{{detail} · {wins} wins}}",
+  "@standingsSubtitle": {
+    "description": "Second line of a standings row: team or nationality, plus wins when there are any",
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      },
+      "wins": {
+        "type": "int"
+      }
+    }
+  },
+  "standingsPointsUnit": "pts",
+  "@standingsPointsUnit": {
+    "description": "Unit shown under the leader's points when there is no runner-up"
+  },
+  "standingsLeaderMargin": "pts · +{lead} on P2",
+  "@standingsLeaderMargin": {
+    "description": "Unit and lead over second place, under the leader's points",
+    "placeholders": {
+      "lead": {
+        "type": "String"
+      }
+    }
+  },
+  "standingsGapBehind": "−{gap}",
+  "@standingsGapBehind": {
+    "description": "Points behind the leader, with a minus sign",
+    "placeholders": {
+      "gap": {
+        "type": "String"
+      }
+    }
+  },
+  "standingsColumnDriver": "Driver",
+  "@standingsColumnDriver": {
+    "description": "Column label above the drivers' table"
+  },
+  "standingsColumnTeam": "Team",
+  "@standingsColumnTeam": {
+    "description": "Column label above the constructors' table"
+  },
+  "standingsColumnGapPoints": "Gap · Pts",
+  "@standingsColumnGapPoints": {
+    "description": "Column label above the gap and points columns"
+  },
+  "standingsEmpty": "No standings yet",
+  "@standingsEmpty": {
+    "description": "Shown when the season has no standings, e.g. before the first race"
   }
 }

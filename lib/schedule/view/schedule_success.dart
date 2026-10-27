@@ -180,51 +180,21 @@ class _StatusChip extends StatelessWidget {
     final l10n = context.l10n;
 
     return switch (status) {
-      _RaceStatus.done => _Pill(
+      _RaceStatus.done => FormulaOnePill(
         label: l10n.scheduleStatusDone,
         background: scheme.outlineVariant,
         foreground: scheme.onSurface,
       ),
-      _RaceStatus.next => _Pill(
+      _RaceStatus.next => FormulaOnePill(
         label: l10n.scheduleStatusNext,
         background: scheme.primary,
         foreground: scheme.onPrimary,
       ),
-      _RaceStatus.upcoming => _Pill(
+      _RaceStatus.upcoming => FormulaOnePill(
         label: l10n.scheduleStatusUpcoming,
         background: scheme.outlineVariant,
         foreground: scheme.onSurface,
       ),
     };
-  }
-}
-
-class _Pill extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.background,
-    required this.foreground,
-  });
-
-  final String label;
-  final Color background;
-  final Color foreground;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Text(
-          label.toUpperCase(),
-          style: Theme.of(context).textTheme.labelSmall
-              ?.copyWith(color: foreground),
-        ),
-      ),
-    );
   }
 }
