@@ -60,7 +60,7 @@ class _NextRaceCardState extends State<NextRaceCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                FormulaOnePill(
+                _Pill(
                   label: 'Next race',
                   background: scheme.primary,
                   foreground: scheme.onPrimary,

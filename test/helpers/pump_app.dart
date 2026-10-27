@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_one/l10n/l10n.dart';
 import 'package:formula_one/schedule/schedule.dart';
-import 'package:formula_one/standings/standings.dart';
 import 'package:formula_one/theme/theme.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
@@ -17,7 +16,6 @@ extension PumpApp on WidgetTester {
     Widget widget, {
     FormulaOneRepository? formulaOneRepository,
     ScheduleBloc? scheduleBloc,
-    StandingsBloc? standingsBloc,
   }) {
     Widget app = MaterialApp(
       theme: ThemeData(colorScheme: const FormulaOneTheme().colorScheme),
@@ -27,9 +25,6 @@ extension PumpApp on WidgetTester {
     );
     if (scheduleBloc != null) {
       app = BlocProvider<ScheduleBloc>.value(value: scheduleBloc, child: app);
-    }
-    if (standingsBloc != null) {
-      app = BlocProvider<StandingsBloc>.value(value: standingsBloc, child: app);
     }
     if (formulaOneRepository != null) {
       app = RepositoryProvider<FormulaOneRepository>.value(

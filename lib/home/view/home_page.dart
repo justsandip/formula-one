@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formula_one/home/cubit/home_cubit.dart';
 import 'package:formula_one/l10n/l10n.dart';
 import 'package:formula_one/schedule/schedule.dart';
-import 'package:formula_one/standings/standings.dart';
 import 'package:formula_one/theme/theme.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -51,7 +50,7 @@ class HomeView extends StatelessWidget {
     return switch (tab) {
       HomeTab.calendar => const SchedulePage(),
       HomeTab.results => const Placeholder(),
-      HomeTab.standings => const StandingsPage(),
+      HomeTab.standings => const Placeholder(),
     };
   }
 }
