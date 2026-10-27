@@ -1,4 +1,5 @@
-// ignore_for_file: document_ignores, avoid_redundant_argument_values
+// ignore_for_file: prefer_const_constructors, document_ignores,
+// ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,7 +23,7 @@ void main() {
     });
 
     Future<void> pumpHome(WidgetTester tester) async {
-      await tester.pumpApp(const HomePage(), formulaOneRepository: repository);
+      await tester.pumpApp(HomePage(), formulaOneRepository: repository);
       await tester.pump();
       await tester.pump();
     }

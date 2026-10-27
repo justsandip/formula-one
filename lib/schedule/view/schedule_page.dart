@@ -5,6 +5,7 @@ import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formula_one/l10n/l10n.dart';
 import 'package:formula_one/schedule/bloc/schedule_bloc.dart';
+import 'package:formula_one/widgets/widgets.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
 
