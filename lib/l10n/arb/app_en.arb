@@ -184,5 +184,55 @@
   "standingsEmpty": "No standings yet",
   "@standingsEmpty": {
     "description": "Shown when the season has no standings, e.g. before the first race"
+  },
+  "resultsLatestChip": "Latest race",
+  "@resultsLatestChip": {
+    "description": "Chip shown while the results tab is on the most recent race"
+  },
+  "resultsRoundPill": "Round {round}",
+  "@resultsRoundPill": {
+    "description": "Button that opens the race picker, showing the current round",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "resultsKicker": "Round {round} · {location}",
+  "@resultsKicker": {
+    "description": "Small label above the race name on the results page",
+    "placeholders": {
+      "round": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "resultsPodiumPosition": "P{position}",
+  "@resultsPodiumPosition": {
+    "description": "Finishing place on a podium card, e.g. P1",
+    "placeholders": {
+      "position": {
+        "type": "int"
+      }
+    }
+  },
+  "resultsEmpty": "No results yet",
+  "@resultsEmpty": {
+    "description": "Shown when there are no race results to display"
+  },
+  "resultsPickerTitle": "Choose a race",
+  "@resultsPickerTitle": {
+    "description": "Title of the race picker sheet"
+  },
+  "resultsPickerLatestChip": "Latest",
+  "@resultsPickerLatestChip": {
+    "description": "Chip on the most recent race in the picker"
+  },
+  "resultsPickerEmpty": "No completed races yet",
+  "@resultsPickerEmpty": {
+    "description": "Shown in the picker when no race has been run"
   }
 }
