@@ -11,11 +11,14 @@ class _MockRacesResource extends Mock implements RacesResource {}
 
 class _MockStandingsResource extends Mock implements StandingsResource {}
 
+class _MockResultsResource extends Mock implements ResultsResource {}
+
 void main() {
   group('FormulaOneRepository', () {
     late FormulaOneApiClient apiClient;
     late RacesResource racesResource;
     late StandingsResource standingsResource;
+    late ResultsResource resultsResource;
     late FormulaOneRepository repository;
 
     final race = Race(
@@ -58,13 +61,27 @@ void main() {
       wins: 14,
       constructor: constructor,
     );
+    const raceResult = RaceResult(
+      position: 1,
+      positionText: '1',
+      points: 25,
+      grid: 1,
+      laps: 57,
+      status: 'Finished',
+      driver: driver,
+      constructor: constructor,
+      time: '1:42:06.304',
+    );
+    final raceResults = RaceResults(race: race, results: const [raceResult]);
 
     setUp(() {
       apiClient = _MockFormulaOneApiClient();
       racesResource = _MockRacesResource();
       standingsResource = _MockStandingsResource();
+      resultsResource = _MockResultsResource();
       when(() => apiClient.racesResource).thenReturn(racesResource);
       when(() => apiClient.standingsResource).thenReturn(standingsResource);
+      when(() => apiClient.resultsResource).thenReturn(resultsResource);
       repository = FormulaOneRepository(apiClient: apiClient);
     });
 
@@ -170,6 +187,84 @@ void main() {
 
         await expectLater(
           repository.getConstructorStandings(),
+          throwsA(same(failure)),
+        );
+      });
+    });
+
+    group('getRaceResults', () {
+      test('returns the results of a round of the current season', () async {
+        when(
+          () => resultsResource.getRaceResults(round: 17, season: null),
+        ).thenAnswer((_) async => raceResults);
+
+        expect(await repository.getRaceResults(round: 17), raceResults);
+        verify(
+          () => resultsResource.getRaceResults(round: 17, season: null),
+        ).called(1);
+      });
+
+      test('passes the requested season through', () async {
+        when(
+          () => resultsResource.getRaceResults(round: 17, season: 2025),
+        ).thenAnswer((_) async => raceResults);
+
+        expect(
+          await repository.getRaceResults(round: 17, season: 2025),
+          raceResults,
+        );
+        verify(
+          () => resultsResource.getRaceResults(round: 17, season: 2025),
+        ).called(1);
+      });
+
+      test('returns null when the race has not been run', () async {
+        when(
+          () => resultsResource.getRaceResults(round: 17, season: null),
+        ).thenAnswer((_) async => null);
+
+        expect(await repository.getRaceResults(round: 17), isNull);
+      });
+
+      test('lets api failures through unchanged', () async {
+        const failure = FormulaOneNetworkFailure('offline');
+        when(
+          () => resultsResource.getRaceResults(round: 17, season: null),
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(
+          repository.getRaceResults(round: 17),
+          throwsA(same(failure)),
+        );
+      });
+    });
+
+    group('getLatestRaceResults', () {
+      test('returns the results of the most recent race', () async {
+        when(
+          () => resultsResource.getLatestRaceResults(),
+        ).thenAnswer((_) async => raceResults);
+
+        expect(await repository.getLatestRaceResults(), raceResults);
+        verify(() => resultsResource.getLatestRaceResults()).called(1);
+      });
+
+      test('returns null when the season has no results yet', () async {
+        when(
+          () => resultsResource.getLatestRaceResults(),
+        ).thenAnswer((_) async => null);
+
+        expect(await repository.getLatestRaceResults(), isNull);
+      });
+
+      test('lets api failures through unchanged', () async {
+        const failure = FormulaOneHttpFailure('boom', statusCode: 500);
+        when(
+          () => resultsResource.getLatestRaceResults(),
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(
+          repository.getLatestRaceResults(),
           throwsA(same(failure)),
         );
       });
