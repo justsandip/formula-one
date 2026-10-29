@@ -4,6 +4,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_one/home/home.dart';
+import 'package:formula_one/results/results.dart';
 import 'package:formula_one/schedule/schedule.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
@@ -57,8 +58,7 @@ void main() {
       await tester.pump();
 
       expect(homeCubit(tester).state.tab, HomeTab.results);
-      // Results is built, standings is not.
-      expect(find.byType(Placeholder, skipOffstage: false), findsOneWidget);
+      expect(find.byType(ResultsPage, skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('selects the standings tab', (tester) async {

@@ -17,6 +17,7 @@ class FormulaOneTheme {
       textTheme: _textTheme,
       dividerTheme: _dividerTheme,
       cardTheme: _cardTheme,
+      bottomSheetTheme: _bottomSheetTheme,
     );
   }
 
@@ -70,6 +71,16 @@ class FormulaOneTheme {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: const BorderSide(color: FormulaOneColors.steel),
+      ),
+    );
+  }
+
+  BottomSheetThemeData get _bottomSheetTheme {
+    return const BottomSheetThemeData(
+      backgroundColor: FormulaOneColors.graphite,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
     );
   }

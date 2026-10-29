@@ -145,3 +145,68 @@ List<ConstructorStanding> sampleConstructorStandings() => [
     nationality: 'Austrian',
   ),
 ];
+
+/// Builds a [RaceResult]. [positionText] defaults to [position].
+RaceResult buildRaceResult({
+  required int position,
+  required String code,
+  String? positionText,
+  String team = 'McLaren',
+  String? time,
+  String status = 'Finished',
+}) {
+  return RaceResult(
+    position: position,
+    positionText: positionText ?? '$position',
+    points: 0,
+    grid: 1,
+    laps: 57,
+    status: status,
+    driver: Driver(
+      id: code.toLowerCase(),
+      permanentNumber: '1',
+      code: code,
+      givenName: code,
+      familyName: code,
+      nationality: 'British',
+    ),
+    constructor: Constructor(
+      id: team.toLowerCase().replaceAll(' ', '_'),
+      name: team,
+      nationality: 'British',
+    ),
+    time: time,
+  );
+}
+
+/// Made-up classification: a podium, two classified rows and a retirement.
+List<RaceResult> sampleRaceResultList() => [
+  buildRaceResult(position: 1, code: 'NOR', time: '1:40:22.000'),
+  buildRaceResult(position: 2, code: 'VER', team: 'Red Bull', time: '+3.2s'),
+  buildRaceResult(position: 3, code: 'PIA', time: '+7.9s'),
+  buildRaceResult(position: 4, code: 'LEC', team: 'Ferrari', time: '+12.4s'),
+  buildRaceResult(position: 5, code: 'RUS', team: 'Mercedes', time: '+15.0s'),
+  buildRaceResult(
+    position: 20,
+    positionText: 'R',
+    code: 'ALO',
+    team: 'Aston Martin',
+    status: 'Retired',
+  ),
+];
+
+/// Builds a [RaceResults]. The race is `City <round>` on a fixed past date.
+RaceResults buildRaceResults({
+  int round = 17,
+  String name = 'Singapore Grand Prix',
+  List<RaceResult>? results,
+}) {
+  return RaceResults(
+    race: buildRace(
+      round: round,
+      name: name,
+      startsAt: DateTime(2020, 3, 15, 12),
+    ),
+    results: results ?? sampleRaceResultList(),
+  );
+}
