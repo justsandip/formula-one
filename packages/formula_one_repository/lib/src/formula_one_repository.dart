@@ -37,4 +37,26 @@ class FormulaOneRepository {
   }) {
     return _apiClient.standingsResource.getConstructorStandings(season: season);
   }
+
+  /// Returns the classification of race [round] of [season], or of the
+  /// current season when null.
+  ///
+  /// Returns null if the race has not been run yet.
+  ///
+  /// Throws a [FormulaOneApiFailure] if the results cannot be loaded.
+  Future<RaceResults?> getRaceResults({required int round, int? season}) {
+    return _apiClient.resultsResource.getRaceResults(
+      round: round,
+      season: season,
+    );
+  }
+
+  /// Returns the classification of the most recent race with results.
+  ///
+  /// Returns null if the season has no results yet.
+  ///
+  /// Throws a [FormulaOneApiFailure] if the results cannot be loaded.
+  Future<RaceResults?> getLatestRaceResults() {
+    return _apiClient.resultsResource.getLatestRaceResults();
+  }
 }
