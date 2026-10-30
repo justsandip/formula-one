@@ -7,7 +7,6 @@ import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
-part 'standings_failure.dart';
 part 'standings_success.dart';
 
 class StandingsPage extends StatelessWidget {
@@ -53,7 +52,7 @@ class StandingsView extends StatelessWidget {
                   constructors: state.constructors,
                 );
               case StandingsStatus.failure:
-                return StandingsFailure(
+                return FormulaOneFailureView(
                   failure: state.failure,
                   onRetry: () => context.read<StandingsBloc>().add(
                     StandingsRequested(season: state.season),

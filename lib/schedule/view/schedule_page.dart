@@ -10,7 +10,6 @@ import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
 
 part 'next_race_card.dart';
-part 'schedule_failure.dart';
 part 'schedule_success.dart';
 
 class SchedulePage extends StatelessWidget {
@@ -50,7 +49,7 @@ class ScheduleView extends StatelessWidget {
               case ScheduleStatus.success:
                 return ScheduleSuccess(races: state.races);
               case ScheduleStatus.failure:
-                return ScheduleFailure(
+                return FormulaOneFailureView(
                   failure: state.failure,
                   onRetry: () => context.read<ScheduleBloc>().add(
                     ScheduleRequested(season: state.season),
