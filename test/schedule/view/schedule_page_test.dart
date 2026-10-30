@@ -2,6 +2,7 @@ import 'package:api_client/api_client.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formula_one/schedule/schedule.dart';
+import 'package:formula_one/widgets/widgets.dart';
 import 'package:formula_one_repository/formula_one_repository.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
@@ -113,7 +114,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(ScheduleFailure), findsOneWidget);
+      expect(find.byType(FormulaOneFailureView), findsOneWidget);
 
       await tester.tap(find.text('Retry'));
 
