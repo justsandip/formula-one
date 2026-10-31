@@ -1,9 +1,12 @@
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:response_cache/response_cache.dart';
 import 'package:test/test.dart';
 
 class _MockDio extends Mock implements Dio {}
+
+class _MockResponseCache extends Mock implements ResponseCache {}
 
 void main() {
   group('FormulaOneApiClient', () {
@@ -156,6 +159,141 @@ void main() {
                 .having((e) => e.cause, 'cause', error)
                 .having((e) => e.message, 'message', contains('/x')),
           ),
+        );
+      });
+    });
+
+    group('with a response cache', () {
+      const baseUrl = 'https://example.com/f1';
+
+      late ResponseCache cache;
+      late FormulaOneApiClient cachedClient;
+
+      setUpAll(() {
+        registerFallbackValue(() async => <String, dynamic>{});
+      });
+
+      setUp(() {
+        cache = _MockResponseCache();
+        when(() => dio.options).thenReturn(BaseOptions(baseUrl: baseUrl));
+        cachedClient = FormulaOneApiClient(dio: dio, cache: cache);
+      });
+
+      Response<Map<String, dynamic>> ok(Map<String, dynamic> data) =>
+          Response(requestOptions: requestOptions, statusCode: 200, data: data);
+
+      /// Simulates a cache miss: the cache calls the network callback it was
+      /// given and returns its result.
+      void stubMiss() {
+        when(
+          () => cache.fetch(
+            key: any(named: 'key'),
+            network: any(named: 'network'),
+          ),
+        ).thenAnswer((invocation) {
+          final network =
+              invocation.namedArguments[#network]
+                  as Future<Map<String, dynamic>> Function();
+          return network();
+        });
+      }
+
+      void verifyNoNetworkCalls() => verifyNever(
+        () => dio.get<Map<String, dynamic>>(
+          any(),
+          queryParameters: any(named: 'queryParameters'),
+        ),
+      );
+
+      test(
+        'returns what the cache returns without calling the network',
+        () async {
+          when(
+            () => cache.fetch(
+              key: '$baseUrl/x.json',
+              network: any(named: 'network'),
+            ),
+          ).thenAnswer((_) async => <String, dynamic>{'n': 1});
+
+          final body = await cachedClient.get('/x.json');
+
+          expect(body, {'n': 1});
+          verifyNoNetworkCalls();
+        },
+      );
+
+      test(
+        'asks the cache for a key built from the path and sorted query',
+        () async {
+          when(
+            () => cache.fetch(
+              key: '$baseUrl/x.json?a=1&b=2',
+              network: any(named: 'network'),
+            ),
+          ).thenAnswer((_) async => <String, dynamic>{'n': 1});
+
+          await cachedClient.get('/x.json', queryParameters: {'b': 2, 'a': 1});
+
+          verify(
+            () => cache.fetch(
+              key: '$baseUrl/x.json?a=1&b=2',
+              network: any(named: 'network'),
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'on a miss the callback performs the request with its parameters',
+        () async {
+          stubMiss();
+          stubGet(() async => ok(<String, dynamic>{'n': 1}));
+
+          final body = await cachedClient.get(
+            '$baseUrl/x.json',
+            queryParameters: {'limit': 100},
+          );
+
+          expect(body, {'n': 1});
+          verify(
+            () => dio.get<Map<String, dynamic>>(
+              '$baseUrl/x.json',
+              queryParameters: {'limit': 100},
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'a network failure inside the callback reaches the caller',
+        () async {
+          stubMiss();
+          stubGet(
+            () async => throw DioException(
+              requestOptions: requestOptions,
+              type: DioExceptionType.connectionTimeout,
+            ),
+          );
+
+          await expectLater(
+            cachedClient.get('$baseUrl/x.json'),
+            throwsA(isA<FormulaOneNetworkFailure>()),
+          );
+        },
+      );
+
+      test('a failure from the cache itself is not swallowed', () async {
+        final failure = StateError('cache broke');
+        when(
+          () => cache.fetch(
+            key: any(named: 'key'),
+            network: any(named: 'network'),
+          ),
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(
+          cachedClient.get('$baseUrl/x.json'),
+          throwsA(same(failure)),
         );
       });
     });

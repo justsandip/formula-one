@@ -1,5 +1,6 @@
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
+import 'package:response_cache/response_cache.dart';
 
 /// {@template formula_one_api_client}
 /// A Dart API Client for F1 Rest APIs
@@ -7,21 +8,26 @@ import 'package:dio/dio.dart';
 /// {@endtemplate}
 class FormulaOneApiClient {
   /// {@macro formula_one_api_client}
-  FormulaOneApiClient({String baseUrl = defaultBaseUrl, Dio? dio})
-    : _dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: baseUrl,
-              connectTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 10),
-            ),
-          );
+  FormulaOneApiClient({
+    String baseUrl = defaultBaseUrl,
+    Dio? dio,
+    ResponseCache? cache,
+  }) : _cache = cache,
+       _dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               baseUrl: baseUrl,
+               connectTimeout: const Duration(seconds: 10),
+               receiveTimeout: const Duration(seconds: 10),
+             ),
+           );
 
   /// Base URL of the Jolpica Ergast-compatible API.
   static const defaultBaseUrl = 'https://api.jolpi.ca/ergast/f1';
 
   final Dio _dio;
+  final ResponseCache? _cache;
 
   /// Season Races endpoints.
   late final RacesResource racesResource = RacesResource(apiClient: this);
@@ -36,6 +42,9 @@ class FormulaOneApiClient {
 
   /// Performs a GET request to [path] and returns the decoded JSON body.
   ///
+  /// With a cache, a response already fetched for the same path and query
+  /// parameters is returned without a network call.
+  ///
   /// [path] is relative to the client's base URL and starts with `/`, e.g.
   /// `/current.json`. Optional [queryParameters] are appended to the URL.
   ///
@@ -46,6 +55,18 @@ class FormulaOneApiClient {
   /// - [FormulaOneMalformedResponseFailure] if the response body is empty.
   /// - [FormulaOneUnknownFailure] for any other unexpected error.
   Future<Map<String, dynamic>> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) {
+    final cache = _cache;
+    if (cache == null) return _network(path, queryParameters: queryParameters);
+    return cache.fetch(
+      key: cacheKey('${_dio.options.baseUrl}$path', queryParameters),
+      network: () => _network(path, queryParameters: queryParameters),
+    );
+  }
+
+  Future<Map<String, dynamic>> _network(
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {
