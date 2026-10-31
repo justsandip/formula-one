@@ -1,4 +1,5 @@
 import 'package:api_client/api_client.dart';
+import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:response_cache/response_cache.dart';
@@ -171,6 +172,8 @@ void main() {
 
       setUpAll(() {
         registerFallbackValue(() async => <String, dynamic>{});
+        registerFallbackValue((_) => false);
+        registerFallbackValue(Duration.zero);
       });
 
       setUp(() {
@@ -182,15 +185,19 @@ void main() {
       Response<Map<String, dynamic>> ok(Map<String, dynamic> data) =>
           Response(requestOptions: requestOptions, statusCode: 200, data: data);
 
+      When<Future<Map<String, dynamic>>> whenFetch({String? key}) => when(
+        () => cache.fetch(
+          key: key ?? any(named: 'key'),
+          network: any(named: 'network'),
+          ttl: any(named: 'ttl'),
+          serveStaleWhen: any(named: 'serveStaleWhen'),
+        ),
+      );
+
       /// Simulates a cache miss: the cache calls the network callback it was
       /// given and returns its result.
       void stubMiss() {
-        when(
-          () => cache.fetch(
-            key: any(named: 'key'),
-            network: any(named: 'network'),
-          ),
-        ).thenAnswer((invocation) {
+        whenFetch().thenAnswer((invocation) {
           final network =
               invocation.namedArguments[#network]
                   as Future<Map<String, dynamic>> Function();
@@ -208,13 +215,9 @@ void main() {
       test(
         'returns what the cache returns without calling the network',
         () async {
-          when(
-            () => cache.fetch(
-              key: '$baseUrl/x.json',
-              network: any(named: 'network'),
-            ),
+          whenFetch(
+            key: '$baseUrl/x.json',
           ).thenAnswer((_) async => <String, dynamic>{'n': 1});
-
           final body = await cachedClient.get('/x.json');
 
           expect(body, {'n': 1});
@@ -225,19 +228,17 @@ void main() {
       test(
         'asks the cache for a key built from the path and sorted query',
         () async {
-          when(
-            () => cache.fetch(
-              key: '$baseUrl/x.json?a=1&b=2',
-              network: any(named: 'network'),
-            ),
+          whenFetch(
+            key: '$baseUrl/x.json?a=1&b=2',
           ).thenAnswer((_) async => <String, dynamic>{'n': 1});
-
           await cachedClient.get('/x.json', queryParameters: {'b': 2, 'a': 1});
 
           verify(
             () => cache.fetch(
               key: '$baseUrl/x.json?a=1&b=2',
               network: any(named: 'network'),
+              ttl: any(named: 'ttl'),
+              serveStaleWhen: any(named: 'serveStaleWhen'),
             ),
           ).called(1);
         },
@@ -284,17 +285,84 @@ void main() {
 
       test('a failure from the cache itself is not swallowed', () async {
         final failure = StateError('cache broke');
-        when(
+        whenFetch(
+          key: '$baseUrl/x.json',
+        ).thenAnswer((_) async => throw failure);
+
+        await expectLater(cachedClient.get('/x.json'), throwsA(same(failure)));
+      });
+
+      test('asks for a ttl that matches the endpoint', () async {
+        whenFetch().thenAnswer((_) async => <String, dynamic>{});
+
+        await withClock(Clock.fixed(DateTime.utc(2026, 10, 31)), () async {
+          await cachedClient.get('/current/driverStandings.json');
+          await cachedClient.get('/2025/driverStandings.json');
+        });
+
+        verify(
           () => cache.fetch(
             key: any(named: 'key'),
             network: any(named: 'network'),
+            ttl: const Duration(hours: 1),
+            serveStaleWhen: any(named: 'serveStaleWhen'),
           ),
-        ).thenAnswer((_) async => throw failure);
+        ).called(1);
+        verify(
+          () => cache.fetch(
+            key: any(named: 'key'),
+            network: any(named: 'network'),
+            ttl: any(named: 'ttl', that: isNull),
+            serveStaleWhen: any(named: 'serveStaleWhen'),
+          ),
+        ).called(1);
+      });
 
-        await expectLater(
-          cachedClient.get('$baseUrl/x.json'),
-          throwsA(same(failure)),
+      test('serves stale data only for outages and server errors', () async {
+        whenFetch().thenAnswer((_) async => <String, dynamic>{});
+        await cachedClient.get('/x.json');
+        final canServeStale =
+            verify(
+                  () => cache.fetch(
+                    key: any(named: 'key'),
+                    network: any(named: 'network'),
+                    ttl: any(named: 'ttl'),
+                    serveStaleWhen: captureAny(named: 'serveStaleWhen'),
+                  ),
+                ).captured.single
+                as bool Function(Object);
+
+        expect(canServeStale(const FormulaOneNetworkFailure('x')), isTrue);
+        expect(
+          canServeStale(const FormulaOneHttpFailure('x', statusCode: 500)),
+          isTrue,
         );
+        expect(
+          canServeStale(const FormulaOneHttpFailure('x', statusCode: 503)),
+          isTrue,
+        );
+        expect(
+          canServeStale(const FormulaOneHttpFailure('x', statusCode: 429)),
+          isTrue,
+        );
+        expect(
+          canServeStale(const FormulaOneHttpFailure('x', statusCode: 404)),
+          isFalse,
+        );
+        expect(
+          canServeStale(const FormulaOneHttpFailure('x', statusCode: null)),
+          isFalse,
+        );
+        expect(
+          canServeStale(const FormulaOneMalformedResponseFailure('x')),
+          isFalse,
+        );
+        expect(
+          canServeStale(const FormulaOneDeserializationFailure('x')),
+          isFalse,
+        );
+        expect(canServeStale(const FormulaOneUnknownFailure('x')), isFalse);
+        expect(canServeStale(StateError('x')), isFalse);
       });
     });
   });

@@ -1,4 +1,6 @@
 import 'package:api_client/api_client.dart';
+import 'package:api_client/src/cache_ttl.dart';
+import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
 import 'package:response_cache/response_cache.dart';
 
@@ -63,6 +65,8 @@ class FormulaOneApiClient {
     return cache.fetch(
       key: cacheKey('${_dio.options.baseUrl}$path', queryParameters),
       network: () => _network(path, queryParameters: queryParameters),
+      ttl: cacheTtlFor(path, now: clock.now()),
+      serveStaleWhen: _canServeStale,
     );
   }
 
@@ -103,4 +107,13 @@ class FormulaOneApiClient {
       _ => FormulaOneNetworkFailure(message, cause: error),
     };
   }
+
+  /// Expired data beats an error when the server cannot be reached or is
+  /// overloaded. Other failures mean something is wrong and must surface.
+  bool _canServeStale(Object error) => switch (error) {
+    FormulaOneNetworkFailure() => true,
+    FormulaOneHttpFailure(:final statusCode) =>
+      statusCode == 429 || (statusCode != null && statusCode >= 500),
+    _ => false,
+  };
 }
