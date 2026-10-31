@@ -12,6 +12,7 @@ dependencies:
     path: packages/api_client
   bloc: ^9.2.1
   bloc_concurrency: ^0.3.0
+  drift_flutter: ^0.3.1
   equatable: ^3.0.0
   flutter:
     sdk: flutter
@@ -24,6 +25,11 @@ dependencies:
   intl: ^0.20.2
   material_ui: ^1.1.1
   meta: ^1.19.0
+  path_provider: ^2.1.6
+  persistent_storage:
+    path: packages/storage/persistent_storage
+  response_cache:
+    path: packages/response_cache
 
 dev_dependencies:
   bloc_lint: ^0.4.2
