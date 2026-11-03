@@ -22,7 +22,12 @@ void main() {
       test(
         'requests the current season by default and parses the rows',
         () async {
-          when(() => apiClient.get(currentPath)).thenAnswer(
+          when(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
+          ).thenAnswer(
             (_) async => driverStandingsBody([
               driverStandingJson(),
               driverStandingJson(position: '2', points: '371', wins: '5'),
@@ -34,23 +39,39 @@ void main() {
           expect(standings.map((s) => s.position), [1, 2]);
           expect(standings.first.points, 408);
           expect(standings.first.driver.code, 'NOR');
-          verify(() => apiClient.get(currentPath)).called(1);
+          verify(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: StandingsResource.limit,
+            ),
+          ).called(1);
         },
       );
 
       test('requests the given season', () async {
         when(
-          () => apiClient.get('/2025/driverStandings.json'),
+          () => apiClient.get(
+            '/2025/driverStandings.json',
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => driverStandingsBody([driverStandingJson()]));
 
-        await resource.getDriverStandings(season: '2025');
+        await resource.getDriverStandings(season: 2025);
 
-        verify(() => apiClient.get('/2025/driverStandings.json')).called(1);
+        verify(
+          () => apiClient.get(
+            '/2025/driverStandings.json',
+            queryParameters: StandingsResource.limit,
+          ),
+        ).called(1);
       });
 
       test('returns an empty list when there are no standings yet', () async {
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => driverStandingsBody([]));
 
         expect(await resource.getDriverStandings(), isEmpty);
@@ -59,7 +80,10 @@ void main() {
       test('lets client failures through unchanged', () async {
         const failure = FormulaOneNetworkFailure('offline');
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => throw failure);
 
         await expectLater(
@@ -70,7 +94,10 @@ void main() {
 
       test('throws FormulaOneDeserializationFailure without MRData', () async {
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => <String, dynamic>{});
 
         await expectLater(
@@ -86,7 +113,12 @@ void main() {
       test(
         'throws FormulaOneDeserializationFailure when rows are not a list',
         () async {
-          when(() => apiClient.get(currentPath)).thenAnswer(
+          when(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
+          ).thenAnswer(
             (_) async => <String, dynamic>{
               'MRData': <String, dynamic>{
                 'StandingsTable': <String, dynamic>{
@@ -110,7 +142,10 @@ void main() {
         () async {
           final broken = driverStandingJson()..remove('points');
           when(
-            () => apiClient.get(currentPath),
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
           ).thenAnswer((_) async => driverStandingsBody([broken]));
 
           await expectLater(
@@ -123,7 +158,12 @@ void main() {
       test(
         'throws FormulaOneDeserializationFailure for a bad number',
         () async {
-          when(() => apiClient.get(currentPath)).thenAnswer(
+          when(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
+          ).thenAnswer(
             (_) async =>
                 driverStandingsBody([driverStandingJson(position: 'x')]),
           );
@@ -148,7 +188,12 @@ void main() {
       test(
         'requests the current season by default and parses the rows',
         () async {
-          when(() => apiClient.get(currentPath)).thenAnswer(
+          when(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
+          ).thenAnswer(
             (_) async => constructorStandingsBody([
               constructorStandingJson(),
               constructorStandingJson(position: '2', points: '600', wins: '6'),
@@ -160,25 +205,41 @@ void main() {
           expect(standings.map((s) => s.position), [1, 2]);
           expect(standings.first.points, 800);
           expect(standings.first.constructor.id, 'mclaren');
-          verify(() => apiClient.get(currentPath)).called(1);
+          verify(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: StandingsResource.limit,
+            ),
+          ).called(1);
         },
       );
 
       test('requests the given season', () async {
-        when(() => apiClient.get('/2025/constructorStandings.json')).thenAnswer(
+        when(
+          () => apiClient.get(
+            '/2025/constructorStandings.json',
+            queryParameters: any(named: 'queryParameters'),
+          ),
+        ).thenAnswer(
           (_) async => constructorStandingsBody([constructorStandingJson()]),
         );
 
-        await resource.getConstructorStandings(season: '2025');
+        await resource.getConstructorStandings(season: 2025);
 
         verify(
-          () => apiClient.get('/2025/constructorStandings.json'),
+          () => apiClient.get(
+            '/2025/constructorStandings.json',
+            queryParameters: StandingsResource.limit,
+          ),
         ).called(1);
       });
 
       test('returns an empty list when there are no standings yet', () async {
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => constructorStandingsBody([]));
 
         expect(await resource.getConstructorStandings(), isEmpty);
@@ -187,7 +248,10 @@ void main() {
       test('lets client failures through unchanged', () async {
         const failure = FormulaOneHttpFailure('boom', statusCode: 500);
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => throw failure);
 
         await expectLater(
@@ -198,7 +262,10 @@ void main() {
 
       test('throws FormulaOneDeserializationFailure without MRData', () async {
         when(
-          () => apiClient.get(currentPath),
+          () => apiClient.get(
+            currentPath,
+            queryParameters: any(named: 'queryParameters'),
+          ),
         ).thenAnswer((_) async => <String, dynamic>{});
 
         await expectLater(
@@ -214,7 +281,12 @@ void main() {
       test(
         'throws FormulaOneDeserializationFailure when rows are not a list',
         () async {
-          when(() => apiClient.get(currentPath)).thenAnswer(
+          when(
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
+          ).thenAnswer(
             (_) async => <String, dynamic>{
               'MRData': <String, dynamic>{
                 'StandingsTable': <String, dynamic>{
@@ -238,7 +310,10 @@ void main() {
         () async {
           final broken = constructorStandingJson()..remove('Constructor');
           when(
-            () => apiClient.get(currentPath),
+            () => apiClient.get(
+              currentPath,
+              queryParameters: any(named: 'queryParameters'),
+            ),
           ).thenAnswer((_) async => constructorStandingsBody([broken]));
 
           await expectLater(

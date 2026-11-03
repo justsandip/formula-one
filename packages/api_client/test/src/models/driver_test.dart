@@ -33,5 +33,25 @@ void main() {
         'Driver(norris, 4, NOR, Lando, Norris, British)',
       );
     });
+
+    test('abv returns code when there is one', () {
+      final driver = Driver.fromJson(driverJson());
+      expect(driver.abv, driver.code);
+    });
+
+    test('abv returns code when there is one', () {
+      final driver = Driver.fromJson(driverJson());
+      expect(driver.abv, driver.code);
+    });
+
+    test('abv returns correctly for null code', () {
+      final driver = Driver.fromJson(driverJson(code: null));
+      expect(driver.abv, 'NOR');
+    });
+
+    test('abv returns correctly for null code and short family name', () {
+      final driver = Driver.fromJson(driverJson(code: null, familyName: 'Ab'));
+      expect(driver.abv, 'AB');
+    });
   });
 }

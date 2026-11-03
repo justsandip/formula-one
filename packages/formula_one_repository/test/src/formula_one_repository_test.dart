@@ -117,32 +117,30 @@ void main() {
     group('getDriverStandings', () {
       test('returns the current season standings by default', () async {
         when(
-          () => standingsResource.getDriverStandings(season: 'current'),
+          () => standingsResource.getDriverStandings(),
         ).thenAnswer((_) async => [driverStanding]);
 
         expect(await repository.getDriverStandings(), [driverStanding]);
-        verify(
-          () => standingsResource.getDriverStandings(season: 'current'),
-        ).called(1);
+        verify(() => standingsResource.getDriverStandings()).called(1);
       });
 
       test('passes the requested season through', () async {
         when(
-          () => standingsResource.getDriverStandings(season: '2025'),
+          () => standingsResource.getDriverStandings(season: 2025),
         ).thenAnswer((_) async => [driverStanding]);
 
-        expect(await repository.getDriverStandings(season: '2025'), [
+        expect(await repository.getDriverStandings(season: 2025), [
           driverStanding,
         ]);
         verify(
-          () => standingsResource.getDriverStandings(season: '2025'),
+          () => standingsResource.getDriverStandings(season: 2025),
         ).called(1);
       });
 
       test('lets api failures through unchanged', () async {
         const failure = FormulaOneHttpFailure('boom', statusCode: 500);
         when(
-          () => standingsResource.getDriverStandings(season: 'current'),
+          () => standingsResource.getDriverStandings(),
         ).thenAnswer((_) async => throw failure);
 
         await expectLater(
@@ -155,34 +153,32 @@ void main() {
     group('getConstructorStandings', () {
       test('returns the current season standings by default', () async {
         when(
-          () => standingsResource.getConstructorStandings(season: 'current'),
+          () => standingsResource.getConstructorStandings(),
         ).thenAnswer((_) async => [constructorStanding]);
 
         expect(await repository.getConstructorStandings(), [
           constructorStanding,
         ]);
-        verify(
-          () => standingsResource.getConstructorStandings(season: 'current'),
-        ).called(1);
+        verify(() => standingsResource.getConstructorStandings()).called(1);
       });
 
       test('passes the requested season through', () async {
         when(
-          () => standingsResource.getConstructorStandings(season: '2025'),
+          () => standingsResource.getConstructorStandings(season: 2025),
         ).thenAnswer((_) async => [constructorStanding]);
 
-        expect(await repository.getConstructorStandings(season: '2025'), [
+        expect(await repository.getConstructorStandings(season: 2025), [
           constructorStanding,
         ]);
         verify(
-          () => standingsResource.getConstructorStandings(season: '2025'),
+          () => standingsResource.getConstructorStandings(season: 2025),
         ).called(1);
       });
 
       test('lets api failures through unchanged', () async {
         const failure = FormulaOneDeserializationFailure('bad shape');
         when(
-          () => standingsResource.getConstructorStandings(season: 'current'),
+          () => standingsResource.getConstructorStandings(),
         ).thenAnswer((_) async => throw failure);
 
         await expectLater(

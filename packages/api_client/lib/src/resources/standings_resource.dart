@@ -1,4 +1,5 @@
 import 'package:api_client/api_client.dart';
+import 'package:meta/meta.dart';
 
 /// {@template standings_resource}
 /// Access to the standings endpoints (driver and constructor).
@@ -10,13 +11,15 @@ class StandingsResource {
 
   final FormulaOneApiClient _apiClient;
 
+  /// Limit for the API request
+  @visibleForTesting
+  static const limit = <String, dynamic>{'limit': 100};
+
   /// Fetches the current standing for the Drivers' Championship
   /// for the [season]
-  Future<List<DriverStanding>> getDriverStandings({
-    String season = 'current',
-  }) async {
-    final path = '/$season/driverStandings.json';
-    final json = await _apiClient.get(path);
+  Future<List<DriverStanding>> getDriverStandings({int? season}) async {
+    final path = '/${season ?? 'current'}/driverStandings.json';
+    final json = await _apiClient.get(path, queryParameters: limit);
     try {
       final mrData = json['MRData'] as Map<String, dynamic>;
       final table = mrData['StandingsTable'] as Map<String, dynamic>;
@@ -43,10 +46,10 @@ class StandingsResource {
   /// Fetches the current standing for the Constructors' Championship
   /// for the [season]
   Future<List<ConstructorStanding>> getConstructorStandings({
-    String season = 'current',
+    int? season,
   }) async {
-    final path = '/$season/constructorStandings.json';
-    final json = await _apiClient.get(path);
+    final path = '/${season ?? 'current'}/constructorStandings.json';
+    final json = await _apiClient.get(path, queryParameters: limit);
     try {
       final mrData = json['MRData'] as Map<String, dynamic>;
       final table = mrData['StandingsTable'] as Map<String, dynamic>;

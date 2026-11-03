@@ -8,14 +8,14 @@ final class StandingsState extends Equatable {
     this.status = StandingsStatus.initial,
     this.drivers = const [],
     this.constructors = const [],
-    this.season = 'current',
+    this.season,
     this.failure,
   });
 
   final StandingsStatus status;
   final List<DriverStanding> drivers;
   final List<ConstructorStanding> constructors;
-  final String season;
+  final int? season;
   final FormulaOneApiFailure? failure;
 
   @override

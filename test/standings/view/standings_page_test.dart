@@ -1,4 +1,4 @@
-// ignore_for_file: document_ignores, avoid_redundant_argument_values
+// ignore_for_file: document_ignores
 
 import 'package:api_client/api_client.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -22,9 +22,8 @@ void main() {
 
     setUp(() {
       repository = _MockFormulaOneRepository();
-      when(() => repository.getDriverStandings(season: 'current'))
-          .thenAnswer((_) async => []);
-      when(() => repository.getConstructorStandings(season: 'current'))
+      when(() => repository.getDriverStandings()).thenAnswer((_) async => []);
+      when(() => repository.getConstructorStandings())
           .thenAnswer((_) async => []);
     });
 
@@ -38,9 +37,8 @@ void main() {
       await tester.pump();
 
       expect(find.byType(StandingsView), findsOneWidget);
-      verify(() => repository.getDriverStandings(season: 'current')).called(1);
-      verify(() => repository.getConstructorStandings(season: 'current'))
-          .called(1);
+      verify(() => repository.getDriverStandings()).called(1);
+      verify(() => repository.getConstructorStandings()).called(1);
     });
 
     testWidgets('route builds a StandingsPage', (tester) async {
@@ -121,7 +119,7 @@ void main() {
         tester,
         const StandingsState(
           status: StandingsStatus.failure,
-          season: '2025',
+          season: 2025,
           failure: FormulaOneNetworkFailure('offline'),
         ),
       );
@@ -130,8 +128,7 @@ void main() {
 
       await tester.tap(find.text('Retry'));
 
-      verify(() => bloc.add(const StandingsRequested(season: '2025')))
-          .called(1);
+      verify(() => bloc.add(const StandingsRequested(season: 2025))).called(1);
     });
   });
 }

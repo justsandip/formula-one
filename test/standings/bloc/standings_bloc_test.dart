@@ -1,4 +1,4 @@
-// ignore_for_file: document_ignores, avoid_redundant_argument_values
+// ignore_for_file: document_ignores
 
 import 'package:api_client/api_client.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -24,7 +24,7 @@ void main() {
     });
 
     void stubSeason(
-      String season, {
+      int? season, {
       List<DriverStanding>? drivers,
       List<ConstructorStanding>? constructors,
     }) {
@@ -47,7 +47,7 @@ void main() {
     blocTest<StandingsBloc, StandingsState>(
       'emits [loading, success] with both tables for the current season',
       setUp: () =>
-          stubSeason('current', drivers: drivers, constructors: constructors),
+          stubSeason(null, drivers: drivers, constructors: constructors),
       build: buildBloc,
       act: (bloc) => bloc.add(const StandingsRequested()),
       expect: () => [
@@ -59,26 +59,24 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(() => repository.getDriverStandings(season: 'current'))
-            .called(1);
-        verify(() => repository.getConstructorStandings(season: 'current'))
-            .called(1);
+        verify(() => repository.getDriverStandings()).called(1);
+        verify(() => repository.getConstructorStandings()).called(1);
       },
     );
 
     blocTest<StandingsBloc, StandingsState>(
       'emits [loading, success] for a given season',
       setUp: () =>
-          stubSeason('2025', drivers: drivers, constructors: constructors),
+          stubSeason(2025, drivers: drivers, constructors: constructors),
       build: buildBloc,
-      act: (bloc) => bloc.add(const StandingsRequested(season: '2025')),
+      act: (bloc) => bloc.add(const StandingsRequested(season: 2025)),
       expect: () => [
-        const StandingsState(status: StandingsStatus.loading, season: '2025'),
+        const StandingsState(status: StandingsStatus.loading, season: 2025),
         StandingsState(
           status: StandingsStatus.success,
           drivers: drivers,
           constructors: constructors,
-          season: '2025',
+          season: 2025,
         ),
       ],
     );
@@ -86,7 +84,7 @@ void main() {
     blocTest<StandingsBloc, StandingsState>(
       'keeps the tables while the same season reloads',
       setUp: () =>
-          stubSeason('current', drivers: drivers, constructors: constructors),
+          stubSeason(null, drivers: drivers, constructors: constructors),
       seed: () => StandingsState(
         status: StandingsStatus.success,
         drivers: drivers,
@@ -110,26 +108,26 @@ void main() {
 
     blocTest<StandingsBloc, StandingsState>(
       'drops the tables when another season is requested',
-      setUp: () => stubSeason('2025'),
+      setUp: () => stubSeason(2025),
       seed: () => StandingsState(
         status: StandingsStatus.success,
         drivers: drivers,
         constructors: constructors,
       ),
       build: buildBloc,
-      act: (bloc) => bloc.add(const StandingsRequested(season: '2025')),
+      act: (bloc) => bloc.add(const StandingsRequested(season: 2025)),
       expect: () => [
-        const StandingsState(status: StandingsStatus.loading, season: '2025'),
-        const StandingsState(status: StandingsStatus.success, season: '2025'),
+        const StandingsState(status: StandingsStatus.loading, season: 2025),
+        const StandingsState(status: StandingsStatus.success, season: 2025),
       ],
     );
 
     blocTest<StandingsBloc, StandingsState>(
       'emits [loading, failure] when the drivers request fails',
       setUp: () {
-        when(() => repository.getDriverStandings(season: 'current'))
+        when(() => repository.getDriverStandings())
             .thenAnswer((_) async => throw offline);
-        when(() => repository.getConstructorStandings(season: 'current'))
+        when(() => repository.getConstructorStandings())
             .thenAnswer((_) async => constructors);
       },
       build: buildBloc,
@@ -144,9 +142,9 @@ void main() {
       'emits [loading, failure] when the constructors request fails',
       setUp: () {
         const failure = FormulaOneHttpFailure('boom', statusCode: 500);
-        when(() => repository.getDriverStandings(season: 'current'))
+        when(() => repository.getDriverStandings())
             .thenAnswer((_) async => drivers);
-        when(() => repository.getConstructorStandings(season: 'current'))
+        when(() => repository.getConstructorStandings())
             .thenAnswer((_) async => throw failure);
       },
       build: buildBloc,
@@ -162,9 +160,9 @@ void main() {
     blocTest<StandingsBloc, StandingsState>(
       'keeps the tables when a reload of the same season fails',
       setUp: () {
-        when(() => repository.getDriverStandings(season: 'current'))
+        when(() => repository.getDriverStandings())
             .thenAnswer((_) async => throw offline);
-        when(() => repository.getConstructorStandings(season: 'current'))
+        when(() => repository.getConstructorStandings())
             .thenAnswer((_) async => constructors);
       },
       seed: () => StandingsState(
@@ -192,9 +190,9 @@ void main() {
     blocTest<StandingsBloc, StandingsState>(
       'reports unexpected errors and emits an unknown failure',
       setUp: () {
-        when(() => repository.getDriverStandings(season: 'current'))
+        when(() => repository.getDriverStandings())
             .thenAnswer((_) async => throw StateError('boom'));
-        when(() => repository.getConstructorStandings(season: 'current'))
+        when(() => repository.getConstructorStandings())
             .thenAnswer((_) async => constructors);
       },
       build: buildBloc,
@@ -215,43 +213,43 @@ void main() {
     blocTest<StandingsBloc, StandingsState>(
       'ignores the result of a request replaced by a newer one',
       setUp: () {
-        when(() => repository.getDriverStandings(season: '2024'))
+        when(() => repository.getDriverStandings(season: 2024))
             .thenAnswer((_) async {
               await Future<void>.delayed(const Duration(milliseconds: 50));
               return drivers;
             });
-        when(() => repository.getConstructorStandings(season: '2024'))
+        when(() => repository.getConstructorStandings(season: 2024))
             .thenAnswer((_) async {
               await Future<void>.delayed(const Duration(milliseconds: 50));
               return constructors;
             });
-        stubSeason('2025');
+        stubSeason(2025);
       },
       build: buildBloc,
       act: (bloc) => bloc
-        ..add(const StandingsRequested(season: '2024'))
-        ..add(const StandingsRequested(season: '2025')),
+        ..add(const StandingsRequested(season: 2024))
+        ..add(const StandingsRequested(season: 2025)),
       wait: const Duration(milliseconds: 100),
       expect: () => [
-        const StandingsState(status: StandingsStatus.loading, season: '2024'),
-        const StandingsState(status: StandingsStatus.loading, season: '2025'),
-        const StandingsState(status: StandingsStatus.success, season: '2025'),
+        const StandingsState(status: StandingsStatus.loading, season: 2024),
+        const StandingsState(status: StandingsStatus.loading, season: 2025),
+        const StandingsState(status: StandingsStatus.success, season: 2025),
       ],
     );
   });
 
   group('StandingsRequested', () {
     test('defaults to the current season', () {
-      expect(const StandingsRequested().season, 'current');
+      expect(const StandingsRequested().season, null);
     });
 
     test('supports value equality', () {
       expect(
-        const StandingsRequested(season: '2025'),
-        const StandingsRequested(season: '2025'),
+        const StandingsRequested(season: 2025),
+        const StandingsRequested(season: 2025),
       );
       expect(
-        const StandingsRequested(season: '2025'),
+        const StandingsRequested(season: 2025),
         isNot(const StandingsRequested()),
       );
     });
@@ -267,10 +265,7 @@ void main() {
         const StandingsState(),
         isNot(const StandingsState(status: StandingsStatus.loading)),
       );
-      expect(
-        const StandingsState(),
-        isNot(const StandingsState(season: '2025')),
-      );
+      expect(const StandingsState(), isNot(const StandingsState(season: 2025)));
       expect(
         const StandingsState(),
         isNot(const StandingsState(failure: FormulaOneNetworkFailure('x'))),

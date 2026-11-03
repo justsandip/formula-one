@@ -16,27 +16,22 @@ class FormulaOneRepository {
   /// Returns every race of [season], or of the current season when null.
   ///
   /// Throws a [FormulaOneApiFailure] if the races cannot be loaded.
-  Future<List<Race>> getRaces({int? season}) {
-    return _apiClient.racesResource.getRaces(season: season);
-  }
+  Future<List<Race>> getRaces({int? season}) =>
+      _apiClient.racesResource.getRaces(season: season);
 
   /// Returns current drivers' standing for the [season]. Defaults to
   /// the current season.
   ///
   /// Throws a [FormulaOneApiFailure] if the standings cannot be loaded.
-  Future<List<DriverStanding>> getDriverStandings({String season = 'current'}) {
-    return _apiClient.standingsResource.getDriverStandings(season: season);
-  }
+  Future<List<DriverStanding>> getDriverStandings({int? season}) =>
+      _apiClient.standingsResource.getDriverStandings(season: season);
 
   /// Returns current constructors' standing for the [season]. Defaults to
   /// the current season.
   ///
   /// Throws a [FormulaOneApiFailure] if the standings cannot be loaded.
-  Future<List<ConstructorStanding>> getConstructorStandings({
-    String season = 'current',
-  }) {
-    return _apiClient.standingsResource.getConstructorStandings(season: season);
-  }
+  Future<List<ConstructorStanding>> getConstructorStandings({int? season}) =>
+      _apiClient.standingsResource.getConstructorStandings(season: season);
 
   /// Returns the classification of race [round] of [season], or of the
   /// current season when null.
@@ -56,7 +51,6 @@ class FormulaOneRepository {
   /// Returns null if the season has no results yet.
   ///
   /// Throws a [FormulaOneApiFailure] if the results cannot be loaded.
-  Future<RaceResults?> getLatestRaceResults() {
-    return _apiClient.resultsResource.getLatestRaceResults();
-  }
+  Future<RaceResults?> getLatestRaceResults() =>
+      _apiClient.resultsResource.getLatestRaceResults();
 }
