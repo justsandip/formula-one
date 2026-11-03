@@ -119,7 +119,7 @@ class _PodiumStep extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    result.driver.code,
+                    result.driver.abv,
                     style: winner
                         ? textTheme.headlineLarge
                         : textTheme.headlineMedium,
@@ -170,7 +170,7 @@ class _ResultRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(result.driver.code, style: textTheme.titleMedium),
+                Text(result.driver.abv, style: textTheme.titleMedium),
                 Text(
                   result.constructor.name,
                   maxLines: 1,

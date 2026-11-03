@@ -1,12 +1,15 @@
 /// Sample JSON shaped like the Jolpica (Ergast) standings responses.
 /// Values are made up; only the structure matters.
-Map<String, dynamic> driverJson({String code = 'NOR'}) => <String, dynamic>{
+Map<String, dynamic> driverJson({
+  String? code = 'NOR',
+  String familyName = 'Norris',
+}) => <String, dynamic>{
   'driverId': 'norris',
   'permanentNumber': '4',
   'code': code,
   'url': 'http://en.wikipedia.org/wiki/Lando_Norris',
   'givenName': 'Lando',
-  'familyName': 'Norris',
+  'familyName': familyName,
   'dateOfBirth': '1999-11-13',
   'nationality': 'British',
 };

@@ -5,9 +5,9 @@ sealed class StandingsEvent extends Equatable {
 }
 
 final class StandingsRequested extends StandingsEvent {
-  const new({this.season = 'current'});
-  final String season;
+  const new({this.season});
+  final int? season;
 
   @override
-  List<Object> get props => [season];
+  List<Object?> get props => [season];
 }

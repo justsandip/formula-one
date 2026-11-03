@@ -11,11 +11,11 @@ class Driver extends Equatable {
   /// {@macro driver}
   const Driver({
     required this.id,
-    required this.permanentNumber,
-    required this.code,
     required this.givenName,
     required this.familyName,
     required this.nationality,
+    this.permanentNumber,
+    this.code,
   });
 
   /// Converts a JSON [Map] into a [Driver] instance
@@ -26,10 +26,10 @@ class Driver extends Equatable {
   final String id;
 
   /// The permanent number for the [Driver]
-  final String permanentNumber;
+  final String? permanentNumber;
 
   /// Three letter code name
-  final String code;
+  final String? code;
 
   /// Given name
   final String givenName;
@@ -39,6 +39,13 @@ class Driver extends Equatable {
 
   /// Nationality of the [Driver]
   final String nationality;
+
+  /// [code], or the first three letters of the family name without one.
+  String get abv =>
+      code ??
+      familyName
+          .substring(0, familyName.length < 3 ? familyName.length : 3)
+          .toUpperCase();
 
   @override
   List<Object?> get props => [
