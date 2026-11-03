@@ -59,10 +59,8 @@ void main() {
         ),
       ],
       verify: (_) {
-        verify(() => repository.getDriverStandings())
-            .called(1);
-        verify(() => repository.getConstructorStandings())
-            .called(1);
+        verify(() => repository.getDriverStandings()).called(1);
+        verify(() => repository.getConstructorStandings()).called(1);
       },
     );
 
@@ -267,10 +265,7 @@ void main() {
         const StandingsState(),
         isNot(const StandingsState(status: StandingsStatus.loading)),
       );
-      expect(
-        const StandingsState(),
-        isNot(const StandingsState(season: 2025)),
-      );
+      expect(const StandingsState(), isNot(const StandingsState(season: 2025)));
       expect(
         const StandingsState(),
         isNot(const StandingsState(failure: FormulaOneNetworkFailure('x'))),

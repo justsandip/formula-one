@@ -121,9 +121,7 @@ void main() {
         ).thenAnswer((_) async => [driverStanding]);
 
         expect(await repository.getDriverStandings(), [driverStanding]);
-        verify(
-          () => standingsResource.getDriverStandings(),
-        ).called(1);
+        verify(() => standingsResource.getDriverStandings()).called(1);
       });
 
       test('passes the requested season through', () async {
@@ -161,9 +159,7 @@ void main() {
         expect(await repository.getConstructorStandings(), [
           constructorStanding,
         ]);
-        verify(
-          () => standingsResource.getConstructorStandings(),
-        ).called(1);
+        verify(() => standingsResource.getConstructorStandings()).called(1);
       });
 
       test('passes the requested season through', () async {

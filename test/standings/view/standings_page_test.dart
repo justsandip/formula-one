@@ -22,8 +22,7 @@ void main() {
 
     setUp(() {
       repository = _MockFormulaOneRepository();
-      when(() => repository.getDriverStandings())
-          .thenAnswer((_) async => []);
+      when(() => repository.getDriverStandings()).thenAnswer((_) async => []);
       when(() => repository.getConstructorStandings())
           .thenAnswer((_) async => []);
     });
@@ -39,8 +38,7 @@ void main() {
 
       expect(find.byType(StandingsView), findsOneWidget);
       verify(() => repository.getDriverStandings()).called(1);
-      verify(() => repository.getConstructorStandings())
-          .called(1);
+      verify(() => repository.getConstructorStandings()).called(1);
     });
 
     testWidgets('route builds a StandingsPage', (tester) async {
@@ -130,8 +128,7 @@ void main() {
 
       await tester.tap(find.text('Retry'));
 
-      verify(() => bloc.add(const StandingsRequested(season: 2025)))
-          .called(1);
+      verify(() => bloc.add(const StandingsRequested(season: 2025))).called(1);
     });
   });
 }
